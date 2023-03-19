@@ -1,0 +1,187 @@
+.popup {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&__content {
+		padding-left: 15px;
+		padding-top: 15px;
+		padding-right: 15px;
+		padding-bottom: 15px;
+
+		max-width: 400px;
+		width: 100%;
+
+		border: 1px solid #000000;
+		border-radius: 10px;
+
+		&-title {
+			font-size: 20px;
+			text-align: center;
+		}
+
+		&-input {
+			position: relative;
+
+			padding-top: 15px;
+
+			span {
+				display: none;
+
+				position: absolute;
+
+				top: 0px;
+				left: 0px;
+
+				padding-left: 10px;
+
+				font-size: 12px;
+
+				color: red;
+			}
+
+			input {
+				width: 100%;
+
+				border: 1px solid #000000;
+				border-radius: 5px;
+
+				font-size: 18px;
+				line-height: 20px;
+			}
+		}
+
+		&-submit {
+			display: block;
+
+			max-width: 200px;
+			width: 100%;
+
+			margin: 0 auto;
+			margin-top: 20px;
+
+			background: transparent;
+
+			border: 1px solid #000000;
+			border-radius: 10px;
+
+			font-size: 18px;
+			line-height: 30px;
+		}
+	}
+}
+
+.chat {
+	display: flex;
+	align-items: flex-start;
+
+	max-width: 1000px;
+	width: 100%;
+
+	&-user-list {
+		max-width: 200px;
+		width: 100%;
+
+		padding-left: 15px;
+		padding-top: 15px;
+		padding-right: 15px;
+		padding-bottom: 15px;
+
+		margin-top: 20px;
+
+		border: 1px solid #000000;
+		border-right: none;
+		border-bottom-left-radius: 10px;
+		border-top-left-radius: 10px;
+
+		&__item {
+			display: flex;
+			align-items: center;
+
+			margin-top: 10px;
+
+			&:first-child {
+				margin-top: 0px;
+			}
+
+			&-avatar {
+				width: 25px;
+				height: 25px;
+
+				border: 1px solid #000000;
+				border-radius: 50%;
+			}
+
+			&-name {
+				margin-left: 10px;
+
+				font-size: 20px;
+			}
+		}
+	}
+
+	&-content {
+		width: 100%;
+
+		padding-left: 15px;
+		padding-top: 15px;
+		padding-right: 15px;
+		padding-bottom: 15px;
+
+		border: 1px solid #000000;
+		border-radius: 10px;
+
+		&__message-list {
+			min-height: 200px;
+
+			max-height: 400px;
+
+			padding-right: 15px;
+
+			overflow-y: scroll;
+
+			&-item {
+				margin-top: 20px;
+
+				&:first-child {
+					margin-top: 0;
+				}
+
+				&-info {
+					font-size: 15px;
+					color: gray;
+				}
+
+				&-text {
+					margin-top: 5px;
+					font-size: 18px;
+				}
+			}
+		}
+
+		&__form {
+			margin-top: 20px;
+		}
+
+		&__input {
+			width: 100%;
+			height: 40px;
+
+			padding-left: 5px;
+			padding-top: 8px;
+			padding-right: 5px;
+			padding-bottom: 10px;
+
+			border-radius: 5px;
+
+			line-height: 20px;
+			resize: none;
+		}
+	}
+}

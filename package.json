@@ -63,6 +63,7 @@
 	"homepage": "https://github.com/DnD-developer/ahj-homeworks-sseWs-front#readme",
 	"dependencies": {
 		"core-js": "^3.26.0",
-		"reset-css": "^5.0.1"
+		"reset-css": "^5.0.1",
+		"uuid": "^9.0.0"
 	}
 }
