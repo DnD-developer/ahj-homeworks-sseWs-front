@@ -53,6 +53,7 @@
 			{
 				"enforceForRenamedProperties": false
 			}
-		]
+		],
+		"no-console": [0]
 	}
 }

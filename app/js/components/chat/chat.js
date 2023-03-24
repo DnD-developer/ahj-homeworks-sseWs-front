@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid"
 import dateFormat from "../../services/service"
 
 export default class Chat {
@@ -9,34 +8,31 @@ export default class Chat {
 	}
 
 	init() {
-		this.userList = [
-			{
-				id: 1,
-				name: "Alexander"
-			},
-			{
-				id: 3,
-				name: "Nikita"
-			},
-			{
-				id: 2,
-				name: "Rick"
-			}
-		]
-		this.messageList = [
-			{
-				idParrent: 3,
-				date: "23:10 20.03.2019",
-				text: "привет как дела"
-			},
-			{
-				idParrent: 2,
-				date: "21:10 20.03.2019",
-				text: "Пока не родила"
-			}
-		]
+		this.ws = new WebSocket("ws://localhost:7070/ws")
 
-		this.createInitPopup()
+		this.ws.addEventListener("message", response => {
+			const data = JSON.parse(response.data)
+
+			switch (data.type) {
+				case "init":
+					this.userList = data.users
+					this.messageList = data.messages
+
+					this.createInitPopup()
+					break
+				case "users":
+					this.userList = data.users
+
+					this.renderUsers()
+					break
+				case "message":
+					console.log(data)
+					this.renderMessage(data.user, data.message)
+					break
+				default:
+					break
+			}
+		})
 	}
 
 	createInitPopup() {
@@ -71,13 +67,17 @@ export default class Chat {
 					return
 				}
 
-				if (this.userList.findIndex(user => user.name === nikNameInput.value) === -1) {
-					this.currentId = uuidv4()
-
-					this.userList.push({
-						id: this.currentId,
+				if (this.userList.findIndex(user => user === nikNameInput.value) === -1) {
+					this.currentUser = {
 						name: nikNameInput.value
-					})
+					}
+
+					this.ws.send(
+						JSON.stringify({
+							type: "addUser",
+							user: this.currentUser
+						})
+					)
 
 					nikNameInput.value = ""
 
@@ -120,9 +120,6 @@ export default class Chat {
 		this.textAreaDomEl = this.chatDomEl.querySelector(".chat-content__input")
 		this.formDomEl = this.chatDomEl.querySelector(".chat-content__form")
 
-		this.currentUser = this.userList.find(user => user.id === this.currentId)
-
-		this.renderUsers()
 		this.renderAllMessages()
 		this.addEvents()
 	}
@@ -168,11 +165,11 @@ export default class Chat {
 
 			userItemDomEl.innerHTML = `
                 <div class="chat-user-list__item-avatar"></div>
-                <h2 class="chat-user-list__item-name" style="${user.id === this.currentId ? "color: #FF6600" : ""}">${
-				user.id === this.currentId ? "You" : user.name
+                <h2 class="chat-user-list__item-name" style="${user === this.currentUser.name ? "color: #FF6600" : ""}">${
+				user === this.currentUser.name ? "You" : user
 			}</h2>
             `
-			if (user.id === this.currentId) {
+			if (user === this.currentUser.name) {
 				this.userListDomEl.insertAdjacentElement("beforeEnd", userItemDomEl)
 
 				return
@@ -184,14 +181,12 @@ export default class Chat {
 
 	createNewMessage(text) {
 		const message = {
-			idParrent: this.currentId,
+			idParrent: this.currentUser.name,
 			date: dateFormat(),
 			text
 		}
 
-		this.messageList.push(message)
-
-		this.renderMessage(this.currentUser, message)
+		this.ws.send(JSON.stringify({ type: "message", message }))
 	}
 
 	renderMessage(user, message) {
@@ -200,21 +195,20 @@ export default class Chat {
 		messageDomEl.classList.add("chat-content__message-list-item")
 
 		messageDomEl.innerHTML = `
-            <p class="chat-content__message-list-item-info" style="${user.id === this.currentId ? "color: #FF6600" : ""}">
-                ${user.id === this.currentId ? "You" : user.name},
+            <p class="chat-content__message-list-item-info" style="${user === this.currentUser.name ? "color: #FF6600" : ""}">
+                ${user === this.currentUser.name ? "You" : user},
                 <span class="chat-content__message-list-item-date"> ${message.date}</span>
             </p>
             <pre class="chat-content__message-list-item-text">${message.text}</pre>
         `
-		messageDomEl.style.textAlign = `${user.id === this.currentId ? "right" : ""}`
+		messageDomEl.style.textAlign = `${user === this.currentUser.name ? "right" : ""}`
 
 		this.messageListDomEl.appendChild(messageDomEl)
 	}
 
 	renderAllMessages() {
 		this.messageList.forEach(message => {
-			const currentUser = this.userList.find(user => user.id === message.idParrent)
-			this.renderMessage(currentUser, message)
+			this.renderMessage(message.idParrent, message)
 		})
 	}
 }
