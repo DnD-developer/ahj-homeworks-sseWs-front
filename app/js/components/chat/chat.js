@@ -8,7 +8,7 @@ export default class Chat {
 	}
 
 	init() {
-		this.ws = new WebSocket("ws://localhost:7070/ws")
+		this.ws = new WebSocket("ws:/ahj-homeworks-ssews-back.onrender.com/ws")
 
 		this.ws.addEventListener("message", response => {
 			const data = JSON.parse(response.data)
@@ -26,7 +26,6 @@ export default class Chat {
 					this.renderUsers()
 					break
 				case "message":
-					console.log(data)
 					this.renderMessage(data.user, data.message)
 					break
 				default:
