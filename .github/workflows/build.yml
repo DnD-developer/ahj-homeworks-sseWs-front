@@ -12,6 +12,25 @@ on:
       - "./.eslintignore"
 
 jobs:
+  lint_App:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v3
+
+      - name: Cache Install
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ hashFiles('**/package-lock.json') }} - cashes
+
+      - name: Install dependecies
+        run: npm ci
+
+      - name: Lint application
+        run: npm run lint
+
   build_App:
     needs: [lint_App]
 
